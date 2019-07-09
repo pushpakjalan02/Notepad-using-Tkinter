@@ -3,13 +3,19 @@ import os
 from tkinter.filedialog import *
 
 window = tkinter.Tk()
-window.title('Notepad by Pushpak')
+window.title('Untitled.txt - Notepad')
 
 menu = tkinter.Menu(window)
 
 text_area = tkinter.Text(window, undo = True)    
 
 file_name = None
+
+def new_function():
+    global window, menu, text_area, file_name
+    file_name = None
+    text_area.delete(1.0, END)
+    window.title("Untitled.txt - Notepad")
 
 def open_function():
     global window, menu, text_area, file_name
@@ -82,11 +88,11 @@ def paste():
         text_area.insert(tkinter.INSERT, paste_val)
 
 def file_menu(file):
-    file.add_command(label='New')
+    file.add_command(label='New', command = new_function)
     file.add_command(label='Open', command = open_function)
     file.add_command(label='Save', command = save_function)
     file.add_command(label='Save As', command = save_as_function)
-    file.add_command(label='Close')
+    file.add_command(label='Close', command = window.destroy)
     return
 
 def edit_menu(edit):
