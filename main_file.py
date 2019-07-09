@@ -7,14 +7,14 @@ window.title('Untitled.txt - Notepad')
 
 menu = tkinter.Menu(window)
 
-text_area = tkinter.Text(window, undo = True)    
+text_area = tkinter.Text(window, state = NORMAL, undo = True)    
 
 file_name = None
 
 def new_function():
     global window, menu, text_area, file_name
     file_name = None
-    text_area.delete(1.0, END)
+    text_area.delete(1.0, tkinter.END)
     window.title("Untitled.txt - Notepad")
 
 def open_function():
@@ -24,9 +24,9 @@ def open_function():
         file_name = None
     else:
         window.title(os.path.basename(file_name) + " - Notepad")
-        text_area.delete(1.0, END)
+        text_area.delete(1.0, tkinter.END)
         open_file = open(file_name, "r")
-        text_area.insert(1.0,open_file.read())
+        text_area.insert(1.0,open_file.read()[:-1])
         open_file.close()
     return
 
@@ -38,7 +38,7 @@ def save_function():
             file_name = None
     if(file_name != None):
         save_file = open(file_name, "w")
-        save_file.write(text_area.get(1.0, END))
+        save_file.write(text_area.get(1.0, tkinter.END))
         save_file.close()
         window.title(os.path.basename(file_name) + " - Notepad")
         return
@@ -49,7 +49,7 @@ def save_as_function():
     if(temp_file_name != ""):
         file_name = temp_file_name
         save_file = open(file_name, "w")
-        save_file.write(text_area.get(1.0, END))
+        save_file.write(text_area.get(1.0, tkinter.END))
         save_file.close()
         window.title(os.path.basename(file_name) + " - Notepad")
     return
@@ -87,6 +87,12 @@ def paste():
     finally:
         text_area.insert(tkinter.INSERT, paste_val)
 
+def select_all():
+    length = "1." + str(len(text_area.get("1.0", tkinter.END)))
+    text_area.tag_add(tkinter.SEL, "1.0", length) 
+    text_area.focus_set()
+    return
+
 def file_menu(file):
     file.add_command(label='New', command = new_function)
     file.add_command(label='Open', command = open_function)
@@ -102,7 +108,7 @@ def edit_menu(edit):
     edit.add_command(label='Cut', command = cut)
     edit.add_command(label='Copy', command = copy)
     edit.add_command(label='Paste', command = paste)
-    edit.add_command(label='Select All')
+    edit.add_command(label='Select All', command = select_all)
     edit.add_separator()
     edit.add_command(label='Find')
     edit.add_command(label='Find Next')
